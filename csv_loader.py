@@ -5,13 +5,13 @@ import os
 import mysql.connector
 
 # connect to MySQL
-mydb = mysql.connector.connect(
+db_conn = mysql.connector.connect(
     host="localhost",
     user="root",
     passwd="root",
     database="dataloader"
 )
-my_cursor = mydb.cursor()
+db_cursor = db_conn.cursor()
 
 archive_path = '/home/shakir/data/'
 archive_name = 'data-archive.zip'
@@ -45,7 +45,7 @@ final_csv_file = os.path.join(tmp_dir, file_name)
 # Create table
 
 sql = "DROP TABLE IF EXISTS TRANSACTIONS"
-my_cursor.execute(sql)
+db_cursor.execute(sql)
 print("Table: TRANSACTIONS dropped successfully.\n")
 
 try:
@@ -65,8 +65,8 @@ try:
           "LONGITUDE DOUBLE);"
 
 
-    my_cursor.execute(sql)
-    mydb.commit()
+    db_cursor.execute(sql)
+    db_conn.commit()
     print("Table EMP created successfully.\n")
 
 except mysql.connector.Error as err:
@@ -83,12 +83,16 @@ with open(final_csv_file, newline='') as csv_file:
                   "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             val = (row['street'], row['city'], row['zip'], row['state'],row['beds'], row['baths'], row['sq__ft'], row['type'],row['sale_date'], row['price'], row['latitude'], row['longitude'])
 
-            my_cursor.execute(sql, val)
-            mydb.commit()
-            print(my_cursor.rowcount, " record inserted.\r")
+            db_cursor.execute(sql, val)
+            db_conn.commit()
+            print(db_cursor.rowcount, " record inserted.\r")
 
         except mysql.connector.Error as err:
             print("SQL Error in INSERT segment:\n", "{}".format(err), "\n")
+
+#Close DB Connection
+db_conn.close
+db_cursor.close()
 
 # Delete $HOME/tmp
 shutil.rmtree(tmp_dir)
