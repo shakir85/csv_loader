@@ -14,8 +14,8 @@ mydb = mysql.connector.connect(
 my_cursor = mydb.cursor()
 
 archive_path = '/home/shakir/data/'
-archive_name = 'dummy.zip'
-file_name = 'dummy.csv'
+archive_name = 'data-archive.zip'
+file_name = 'Sacramento_RealEstate_Transactions.csv'
 
 # List available files
 # Add: Catch not a directory exception
@@ -44,16 +44,27 @@ final_csv_file = os.path.join(tmp_dir, file_name)
 
 # Create table
 
-sql = "DROP TABLE IF EXISTS EMP"
+sql = "DROP TABLE IF EXISTS TRANSACTIONS"
 my_cursor.execute(sql)
-print("Table: EMP dropped successfully.\n")
+print("Table: TRANSACTIONS dropped successfully.\n")
 
 try:
-    sql = "CREATE TABLE IF NOT EXISTS EMP" \
-    "(ID INT NOT NULL PRIMARY KEY," \
-    "NAME VARCHAR(245)," \
-    "SALARY DOUBLE," \
-    "DEPT VARCHAR(245))"
+    sql = "CREATE TABLE TRANSACTIONS " \
+          "(ID INT NOT NULL PRIMARY KEY AUTO_INCREMENT, " \
+          "STREET VARCHAR(245), " \
+          "CITY  VARCHAR(245), " \
+          "ZIP  VARCHAR(245), " \
+          "STATE CHAR(2), " \
+          "BEDS FLOAT, " \
+          "BATHS FLOAT, " \
+          "SQ_FT FLOAT, " \
+          "TYPE VARCHAR(245), " \
+          "SALE_DATE VARCHAR(245), " \
+          "PRICE DOUBLE, " \
+          "LATITUDE DOUBLE, " \
+          "LONGITUDE DOUBLE);"
+
+
     my_cursor.execute(sql)
     mydb.commit()
     print("Table EMP created successfully.\n")
@@ -68,15 +79,18 @@ with open(final_csv_file, newline='') as csv_file:
     # Insert to DB
     for row in reader:
         try:
-            sql = "INSERT INTO emp (ID, NAME, SALARY, DEPT) VALUES (%s, %s, %s, %s)"
-            val = (row['id'], row['name'], row['salary'], row['department'])
+            sql = "INSERT INTO TRANSACTIONS (STREET, CITY, ZIP, STATE, BEDS, BATHS, SQ_FT, TYPE, SALE_DATE, PRICE, LATITUDE, LONGITUDE) " \
+                  "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            val = (row['street'], row['city'], row['zip'], row['state'],row['beds'], row['baths'], row['sq__ft'], row['type'],row['sale_date'], row['price'], row['latitude'], row['longitude'])
+
             my_cursor.execute(sql, val)
             mydb.commit()
-            print(my_cursor.rowcount, " record inserted.")
+            print(my_cursor.rowcount, " record inserted.\r")
 
         except mysql.connector.Error as err:
             print("SQL Error in INSERT segment:\n", "{}".format(err), "\n")
 
 # Delete $HOME/tmp
 shutil.rmtree(tmp_dir)
+print("Directory\t", tmp_dir, "\tdeleted successfully")
 
