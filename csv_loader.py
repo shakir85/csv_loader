@@ -42,9 +42,30 @@ for dir_path, dir_names, file_names in os.walk(tmp_dir):
 # Join path + file name
 final_csv_file = os.path.join(tmp_dir, file_name)
 
+# Create table
+
+sql = "DROP TABLE IF EXISTS EMP"
+my_cursor.execute(sql)
+print("Table: EMP dropped successfully.\n")
+
+try:
+    sql = "CREATE TABLE IF NOT EXISTS EMP" \
+    "(ID INT NOT NULL PRIMARY KEY," \
+    "NAME VARCHAR(245)," \
+    "SALARY DOUBLE," \
+    "DEPT VARCHAR(245))"
+    my_cursor.execute(sql)
+    mydb.commit()
+    print("Table EMP created successfully.\n")
+
+except mysql.connector.Error as err:
+    print("SQL Error in CREATE TABLE segment:\n", "{}".format(err), "\n")
+
+
 # Assign to csv reader
 with open(final_csv_file, newline='') as csv_file:
     reader = csv.DictReader(csv_file)
+    # Insert to DB
     for row in reader:
         try:
             sql = "INSERT INTO emp (ID, NAME, SALARY, DEPT) VALUES (%s, %s, %s, %s)"
@@ -52,6 +73,7 @@ with open(final_csv_file, newline='') as csv_file:
             my_cursor.execute(sql, val)
             mydb.commit()
             print(my_cursor.rowcount, " record inserted.")
+
         except mysql.connector.Error as err:
             print("SQL Error in INSERT segment:\n", "{}".format(err), "\n")
 
