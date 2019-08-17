@@ -17,33 +17,30 @@ archive_path = '/home/shakir/data/'
 archive_name = 'data-archive.zip'
 file_name = 'Sacramento_RealEstate_Transactions.csv'
 
-# List available files
-# Add: Catch not a directory exception
-os.listdir(archive_path)
+def unzip_file():
 
-# Create tmp directory + check if $HOME/temp exists
-if not os.path.isdir(os.environ.get('HOME')+'/tmp'):
-    os.makedirs(os.environ.get('HOME') + '/tmp')
+    # Create tmp directory + check if $HOME/temp exists
+    if not os.path.isdir(os.environ.get('HOME')+'/tmp'):
+        os.makedirs(os.environ.get('HOME') + '/tmp')
 
-tmp_dir = os.environ.get('HOME')+'/tmp'
+    tmp_dir = os.environ.get('HOME')+'/tmp'
 
-# Extract to $HOME/tmp
-with ZipFile(archive_path + archive_name) as archive:
-    archive.extractall(path=tmp_dir)
+    # Extract to $HOME/tmp
+    with ZipFile(archive_path + archive_name) as archive:
+        archive.extractall(path=tmp_dir)
+    # List extracted content
+    for dir_path, dir_names, file_names in os.walk(tmp_dir):
+        for file_ in file_names:
+            fn = os.path.join(dir_path, file_)
+            print("Extracted files:")
+            print(fn)
 
-for dir_path, dir_names, file_names in os.walk(tmp_dir):
-    for file_ in file_names:
-        fn = os.path.join(dir_path, file_)
-        print(fn)  # print extracted file(s)
-
-# Choose a file:
-# csv_select = input("Type in a csv file to insert to DB...\n")
-
-# Join path + file name
-final_csv_file = os.path.join(tmp_dir, file_name)
+    # Join path + file name
+    # For later CSV file reading
+    final_csv_file = os.path.join(tmp_dir, file_name)
+    return final_csv_file
 
 # Create table
-
 sql = "DROP TABLE IF EXISTS TRANSACTIONS"
 db_cursor.execute(sql)
 print("Table: TRANSACTIONS dropped successfully.\n")
