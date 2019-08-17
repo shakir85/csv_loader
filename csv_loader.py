@@ -21,9 +21,9 @@ file_name = 'Sacramento_RealEstate_Transactions.csv'
 # Add: Catch not a directory exception
 os.listdir(archive_path)
 
-# Create tmp directory
-# Add: if .. else to check if dir exists
-os.makedirs(os.environ.get('HOME')+'/tmp')
+# Create tmp directory + check if $HOME/temp exists
+if not os.path.isdir(os.environ.get('HOME')+'/tmp'):
+    os.makedirs(os.environ.get('HOME') + '/tmp')
 
 tmp_dir = os.environ.get('HOME')+'/tmp'
 
