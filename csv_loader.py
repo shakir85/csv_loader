@@ -19,7 +19,6 @@ archive_name = 'data-archive.zip'
 file_name = 'Sacramento_RealEstate_Transactions.csv'
 
 def unzip_file():
-
     # Create tmp directory + check if $HOME/temp exists
     if not os.path.isdir(os.environ.get('HOME')+'/tmp'):
         os.makedirs(os.environ.get('HOME') + '/tmp')
@@ -39,7 +38,6 @@ def unzip_file():
     # For CSV file reading in DB function
     final_csv_file = os.path.join(tmp_dir, file_name)
     return final_csv_file, tmp_dir
-
 
 # From the previous function,
 # pass in: unzipped csv file and temporary directory path
