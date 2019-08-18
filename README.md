@@ -1,6 +1,6 @@
 # CSV Files Loader
 
-## Project Description
+## About
 
 Python program to unzip locally hosted archive file and then load a specific CSV file to MySQL table. This program is intended to demonistrate the concept of data extracting and loading tasks. The program is strcutured to handle a historical real estate prices data set of Sacramento county, California. However, the script can be altered to manage similar data extraction jobs. The program assumes that the user already has the read & write permissions to `HOME` directory and to MySQL DB Server.
 
