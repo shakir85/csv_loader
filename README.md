@@ -59,13 +59,13 @@ if not os.path.isdir(os.environ.get('HOME')+'/tmp'):
     os.makedirs(os.environ.get('HOME') + '/tmp')
 ```
 
-- Assign the newly create temp directory to a variable:
+- Assign the newly create temp directory's absolute path to a variable:
 
 ```python
 tmp_dir = os.environ.get('HOME')+'/tmp'
 ```
 
-- Now we can extract the zip archive:
+- Now we can unzip the archive:
 
 ```python
 # Extract to $HOME/tmp
@@ -84,10 +84,10 @@ for dir_path, dir_names, file_names in os.walk(tmp_dir):
         print(fn)
 ```
 
-- Finally, join the temp-directory's path with the CSV file's name to make an absolute path for that CSV file so we can pass it to CSV reader object later on. The function are returning to objects:
+- Finally, join the temp-directory's path with the CSV file's name to make an absolute path for that CSV file so we can pass it to CSV reader object later on. The function will return:
 
 1. The absolute path of the unzipped CSV file.
-2. The absolute path of the temporary directory (to delete it when we finish DB insert task)
+2. The absolute path of the temporary directory (to delete it when we finish DB INSERT task)
 
 ```python
 final_csv_file = os.path.join(tmp_dir, file_name)
@@ -97,7 +97,7 @@ final_csv_file = os.path.join(tmp_dir, file_name)
 
 ### Function 2
 
-- Drop any similar tables & create fresh one (I'm not a big fan of dropping tables, but this is for testing only!).
+- Drop any similar tables & create fresh one (not a big fan of dropping tables! another approach could also be implemented).
 
 ```python
 # Create table
