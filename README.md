@@ -2,20 +2,20 @@
 
 ## About
 
-Python program to unzip locally hosted archive file and then load a specific CSV file to MySQL table. This program is intended to demonstrate the concept of data extracting and loading tasks. The program is strcutured to handle a historical real estate prices data set of Sacramento county, California. However, the script can be altered to manage similar data extraction jobs. The program assumes that the user already has the read & write permissions to `HOME` directory and to MySQL DB Server.
+Python program to unzip locally hosted archive file and then load a specific CSV file to MySQL table. The program is intended to demonstrate the concept of data extraction and loading tasks. The program is designed to handle a historical real-estate prices data of Sacramento county, California. However, the script can be altered to manage similar data extraction jobs. The program assumes that the user already has read & write permissions to `HOME` directory and to MySQL DB Server.
 
 ## Program Approach
 
 _How to tackle the problem and why?_
 
-The approach is to dump the unzipped content to a temporary folder on disk, do the database insert task, and then get rid of the temp folder to eliminate redundant data on disk.
+The approach is to unzip the archive into a temporary folder on disk, insert the intended CSV file into MySQL table, and finally get rid of the temp folder to eliminate redundant data on disk.
 
-Writing unzipped content to a disk rather than holding them in memory via using `StringIO` and `BytesIO` streams seems less efficient, but that's not true from memory management point of view.
+Unzipping the archive to a disk rather than holding the data in memory via using `StringIO` and `BytesIO` streams seems less efficient, but that's not true from memory management point of view.
 
 Holding intermediate data on memory will fail for the following reasons:
 
-- Server instances will run out of memory with huge data sets.
-- Risk of cost-increase when working on cloud instance (i.e. AWS EC2) while memory auto-scaling is enabled.
+- Server instances could run out of memory when working with huge data sets.
+- Risk of cost-increase when executing the program on cloud instance (i.e. AWS EC2) when memory auto-scaling is enabled.
 - Disks are cheaper than memory in terms of cost & failures, as long as proper configurations of distributed storage and distributed filesystem on place.
 - Unzipping files on disk allows us to chain multiple files unzipping-tasks in a single program run.
 
@@ -24,7 +24,7 @@ However, there are some trade-offs of using disks, such as:
 - Network congestion.
 - Slower disk IO (especially with non-SSD disks).
 - Performance dependability on storage and filesystem architectures.
-- If reading/writing to/from cloud storage, additional factors should be considered such as cost, storage configurations, retrieving data from archiving systems ...etc
+- If reading/writing to/from cloud storage, additional factors should be considered such as cost, storage configurations, retrieving data from archiving systems ...etc.
 
 ### Program Structure
 
