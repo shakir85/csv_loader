@@ -2,20 +2,20 @@
 
 ## About
 
-Python program to unzip locally hosted archive file and then load a specific CSV file to MySQL table. This program is intended to demonistrate the concept of data extracting and loading tasks. The program is strcutured to handle a historical real estate prices data set of Sacramento county, California. However, the script can be altered to manage similar data extraction jobs. The program assumes that the user already has the read & write permissions to `HOME` directory and to MySQL DB Server.
+Python program to unzip locally hosted archive file and then load a specific CSV file to MySQL table. The program is intended to demonstrate the concept of data extraction and loading tasks. The program is designed to handle a historical real-estate prices data of Sacramento county, California. However, the script can be altered to manage similar data extraction jobs. The program assumes that the user already has read & write permissions to `HOME` directory and to MySQL DB Server.
 
 ## Program Approach
 
 _How to tackle the problem and why?_
 
-The approach is to dump the unzipped content to a temporary folder on disk, do the database insert task, and then get rid of the temp folder to eliminate redundant data on disk.
+The approach is to unzip the archive into a temporary folder on disk, insert the intended CSV file into MySQL table, and finally get rid of the temp folder to eliminate redundant data on disk.
 
-Writing unzipped content to a disk rather than holding them in memory via using `StringIO` and `BytesIO` streams seems less efficient, but that's not true from memory management point of view.
+Unzipping the archive to a disk rather than holding the data in memory via using `StringIO` and `BytesIO` streams seems less efficient, but that's not true from memory management point of view.
 
 Holding intermediate data on memory will fail for the following reasons:
 
-- Server instances will run out of memory with huge data sets.
-- Risk of cost-increase when working on cloud instance (i.e. AWS EC2) while memory auto-scaling is enabled.
+- Server instances could run out of memory when working with huge data sets.
+- Risk of cost-increase when executing the program on cloud instance (i.e. AWS EC2) when memory auto-scaling is enabled.
 - Disks are cheaper than memory in terms of cost & failures, as long as proper configurations of distributed storage and distributed filesystem on place.
 - Unzipping files on disk allows us to chain multiple files unzipping-tasks in a single program run.
 
@@ -24,7 +24,7 @@ However, there are some trade-offs of using disks, such as:
 - Network congestion.
 - Slower disk IO (especially with non-SSD disks).
 - Performance dependability on storage and filesystem architectures.
-- If reading/writing to/from cloud storage, additional factors should be considered such as cost, storage configurations, retrieving data from archiving systems ...etc
+- If reading/writing to/from cloud storage, additional factors should be considered such as cost, storage configurations, retrieving data from archiving systems ...etc.
 
 ### Program Structure
 
@@ -59,13 +59,13 @@ if not os.path.isdir(os.environ.get('HOME')+'/tmp'):
     os.makedirs(os.environ.get('HOME') + '/tmp')
 ```
 
-- Assign the newly create temp directory to a variable:
+- Assign the newly create temp directory's absolute path to a variable:
 
 ```python
 tmp_dir = os.environ.get('HOME')+'/tmp'
 ```
 
-- Now we can extract the zip archive:
+- Now we can unzip the archive:
 
 ```python
 # Extract to $HOME/tmp
@@ -84,10 +84,10 @@ for dir_path, dir_names, file_names in os.walk(tmp_dir):
         print(fn)
 ```
 
-- Finally, join the temp-directory's path with the CSV file's name to make an absolute path for that CSV file so we can pass it to CSV reader object later on. The function are returning to objects:
+- Finally, join the temp-directory's path with the CSV file's name to make an absolute path for that CSV file so we can pass it to CSV reader object later on. The function will return:
 
 1. The absolute path of the unzipped CSV file.
-2. The absolute path of the temporary directory (to delete it when we finish DB insert task)
+2. The absolute path of the temporary directory (to delete it when we finish DB INSERT task)
 
 ```python
 final_csv_file = os.path.join(tmp_dir, file_name)
@@ -97,7 +97,7 @@ final_csv_file = os.path.join(tmp_dir, file_name)
 
 ### Function 2
 
-- Drop any similar tables & create fresh one (I'm not a big fan of dropping tables, but this is for testing only!).
+- Drop any similar tables & create fresh one (not a big fan of dropping tables! another approach could also be implemented).
 
 ```python
 # Create table
