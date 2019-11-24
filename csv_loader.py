@@ -18,6 +18,7 @@ archive_path = '/home/shakir/data/'
 archive_name = 'data-archive.zip'
 file_name = 'Sacramento_RealEstate_Transactions.csv'
 
+
 def unzip_file():
     # Create tmp directory + check if $HOME/temp exists
     if not os.path.isdir(os.environ.get('HOME')+'/tmp'):
@@ -73,9 +74,9 @@ def db_processing(csv_file_in, temporary_directory):
         reader = csv.DictReader(csv_file)
         print('Processing . . .')
 
-        # Insert to DB
-        for row in reader:
-            try:
+        #Insert into DB
+        try:
+            for row in reader:
                 sql = "INSERT INTO TRANSACTIONS (STREET, CITY, ZIP, STATE, BEDS, BATHS, SQ_FT, TYPE, SALE_DATE, PRICE, LATITUDE, LONGITUDE) " \
                       "VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
                 val = (row['street'], row['city'], row['zip'], row['state'],row['beds'], row['baths'], row['sq__ft'], row['type'],row['sale_date'], row['price'], row['latitude'], row['longitude'])
@@ -84,7 +85,7 @@ def db_processing(csv_file_in, temporary_directory):
                 sys.stdout.write('Processing \r    ')
                 sys.stdout.flush()
 
-            except mysql.connector.Error as err:
+        except mysql.connector.Error as err:
                 print("SQL Error in INSERT segment:\n", "{}".format(err), "\n")
     # Close DB Connection
     db_conn.commit()
