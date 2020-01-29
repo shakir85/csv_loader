@@ -1,3 +1,6 @@
+"""
+Python script to write MySQL table to a CSV file
+"""
 import csv
 import mysql.connector
 
@@ -5,7 +8,7 @@ import mysql.connector
 db_conn = mysql.connector.connect(
     host="localhost",
     user="root",
-    passwd="root", # not a pswd
+    passwd="root",  # not a pswd
     database="dataloader"
 )
 db_cursor = db_conn.cursor()
@@ -13,7 +16,8 @@ table = 'TRANSACTIONS'
 sql = "SELECT * FROM %s;" % table
 db_cursor.execute(sql)
 
-titles_row = ['id', 'street', 'city', 'zip', 'state', 'beds', 'baths', 'sq_ft', 'type', 'sale_date', 'price', 'latitude', 'longitude']
+titles_row = ['id', 'street', 'city', 'zip', 'state', 'beds', 'baths',
+              'sq_ft', 'type', 'sale_date', 'price', 'latitude', 'longitude']
 
 # Export destination
 with open('/home/shakir/data/output.csv', 'w') as file:
