@@ -23,14 +23,14 @@ file_name = 'Sacramento_RealEstate_Transactions.csv'
 
 
 def unzip_file():
-    # Create tmp directory + check if $HOME/temp exists
+    # First check if $HOME/temp exists, if not then create one
     if not os.path.isdir(os.environ.get('HOME')+'/tmp'):
         os.makedirs(os.environ.get('HOME') + '/tmp')
 
     tmp_dir = os.environ.get('HOME')+'/tmp'
 
     # Extract to $HOME/tmp
-    with ZipFile(archive_path + archive_name) as archive:
+    with ZipFile(os.path.join(archive_path, archive_name)) as archive:
         archive.extractall(path=tmp_dir)
     # List extracted content
     print("Extracted files:")
